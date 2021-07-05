@@ -7,8 +7,6 @@ const hostname = '127.0.0.1';
 const port = process.env.PORT || 5000;
 
 const server = http.createServer((req, res) =>{
-    res.writeHead(200, {'content-type': 'text/html'})
-
     //Set up dynamic path
     let path = './userStories/';
     if(req.url === '/' || req.url === '/home'){
@@ -19,18 +17,25 @@ const server = http.createServer((req, res) =>{
         path = path + 'about.html'
     }
     else {
-        path = path + 'error.html'
+        path = path + 'error.html';
     }
+   
 // Read files from userStories
     
     fs.readFile(path, (err, data)=>{
+         
+        //set response header
+    if(path === './userStories/error.html'){
+        res.writeHead(404, {'content-type':'text/html'})
+    }else{
+        res.writeHead(200, {'content-type':'text/html'})
+    }
+      
         if(err){
             console.log(err)
             return;
         }
-        
             res.end(data)
-        
     })
     
 })
